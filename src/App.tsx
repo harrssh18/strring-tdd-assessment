@@ -1,31 +1,36 @@
 import { useState } from 'react'
-import LabeledInputField from './component/LabeledInputField'
 import { add } from './utils/utils'
+import InputForm from './component/InputForm'
+import Result from './component/Result'
+
 
 function App() {
   const [input,setInput] = useState<string>('')
   const [result,setResult] = useState<number>()
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {value} = e.target
+  const onChange = (value:string) => {
     setInput(value)
   }
 
   const onClear = ()=>{
     setInput('')
-    setResult(0)
+    setResult(undefined)
   }
-  const onClick=()=>{
-    add(input)
+  const onSubmit=()=>{
+    try {
+      const sum = add(input);
+      setResult(sum);
+    } catch (error) {
+      alert(error);
+    }
   }
   
   return (
-    <>
-     <LabeledInputField label="Input" name="input" value={input} onChange={onChange}/>
-     <button onClick={onClick}>Calculate</button>
-     <button onClick={onClear}>Clear</button>
-     {result && <div>{result}</div>}
-    </>
+    <div className='flex flex-col mt-12 mx-auto w-2/3'>
+     <h1 className='font-bold text-xl mx-auto w-2/3 bg-yellow-300 text-gray-600 p-2 rounded-md'>String TDD Assessment</h1>
+     <InputForm input={input} onChange={onChange} onClear={onClear} onSubmit={onSubmit}/>
+     <Result output={result}/>
+    </div>
   )
 }
 

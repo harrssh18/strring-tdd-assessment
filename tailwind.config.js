@@ -1,10 +1,11 @@
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./index.html", // Include this for Vite
-    "./src/**/*.{js,ts,jsx,tsx}" // Adjust for TypeScript
+    "./index.html",
+    "./src/**/*.{js,jsx,ts,tsx}", // Include ts and tsx files
   ],
   theme: {
     extend: {},
   },
   plugins: [],
-};
+}

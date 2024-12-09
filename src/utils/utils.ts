@@ -1,42 +1,22 @@
-export const add = (numbers:string): number =>{
-    if (!numbers) return 0; 
-  
-    let delimiterRegex = /,|\n/; 
-    let numberString = numbers;
-  
-    
-    if (numbers.startsWith("//")) {
-      const match = numbers.match(/^\/\/(\[.*?\]|.)\n/);
-      if (match) {
-        const delimiterSection = match[1];
-        numberString = numbers.slice(match[0].length);
-  
-    
-        if (delimiterSection.startsWith("[")) {
-          const delimiters = delimiterSection
-            .slice(1, -1)
-            .split("][");
-          delimiterRegex = new RegExp(delimiters.map(escapeRegex).join("|"), "g");
-        } else {
-          delimiterRegex = new RegExp(escapeRegex(delimiterSection), "g");
-        }
-      }
-    }
-  
-    const splitNumbers = numberString.split(delimiterRegex);
-  
-    const parsedNumbers = splitNumbers.map((num) => parseInt(num, 10) || 0);
-    const negatives = parsedNumbers.filter((num) => num < 0);
-  
-    if (negatives.length) {
-      throw new Error(`Negative numbers not allowed: ${negatives.join(", ")}`);
-    }
-
-    const filteredNumbers = parsedNumbers.filter((num) => num <= 1000);
-  
-    return filteredNumbers.reduce((sum, num) => sum + num, 0);
+export function add(numbers: string): number {
+  if (!numbers) return 0;
+  numbers = numbers.trim(); 
+  let cleanedInput = numbers.replace("\\n", "\n");
+ 
+  let delimiter = /,|\n/; 
+  if (cleanedInput.startsWith("//")) {
+    const parts = cleanedInput?.split("\n");
+   
+    delimiter = new RegExp(parts[0].slice(2)); 
+    cleanedInput = parts[1]; 
   }
-  
-const escapeRegex = (string: string)=> {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+  const numberArray = cleanedInput.split(delimiter).map((num) => num.trim());
+
+  const negatives = numberArray.filter((num) => Number(num) < 0);
+  if (negatives.length > 0) {
+    throw new Error (`Negative numbers not allowed: ${negatives.join(", ")}`);
+  }
+
+  return numberArray.reduce((sum, num) => sum + (Number(num) || 0), 0);
 }
